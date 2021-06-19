@@ -15,6 +15,11 @@ function loadDungeon(dungeonName) {
 
 function loopDungeon(dungeonName, times = 1)  {
     
+    if (!(dungeonName in dungeonList) && !player.town().dungeon) {
+        console.log("This Dungeon does not exist:", dungeonName)
+        return
+    }
+        
     var times = Math.floor(times)
     console.log("entering dungeon loop", times)
     var stepOrder
