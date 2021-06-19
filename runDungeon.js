@@ -70,13 +70,37 @@ function loopDungeon(dungeonName, times = 1)  {
         
         // To Do: move or action
         if(!(DungeonRunner.fighting() || DungeonBattle.catching()) && !DungeonRunner.defeatedBoss()) {
+            var stepNext
+            
             // open chest or start boss fight
-            if (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.chest) {
-                DungeonRunner.openChest();
-            } else if (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss()) {
-                DungeonRunner.startBossFight();
+            if (DungeonRunner.map.currentTile().type() !== GameConstants.DungeonTile.entrance) { DungeonRunner.handleClick();}
+            
+            // if all tiles shown
+            if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_MAP_SHOW) {
+                for (let i = 0; i < DungeonRunner.map.board().length; i++) {
+                    for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
+                        if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.boss) {
+                            stepNext = new Point(j,i)
+                        }
+                    }
+                }
+            } else if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_CHEST_SHOW) {
+                for (let i = 0; i < DungeonRunner.map.board().length; i++) {
+                    for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
+                        if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.chest) {
+                            if (DungeonRunner.map.hasAccesToTile(new Point(j,i))) {
+                                stepNext = new Point(j,i)
+                            }
+                        }
+                    }
+                }
             }
-            if (DungeonRunner.map.moveToTile(stepOrder[stepIndex])) {
+            
+            if (stepNext) {
+                console.log('jumping to', stepNext)
+                DungeonRunner.map.moveToTile(stepNext)
+            } else {
+                DungeonRunner.map.moveToTile(stepOrder[stepIndex])
                 stepIndex = stepIndex + 1
             }
         }
