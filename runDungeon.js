@@ -84,7 +84,9 @@ function loopDungeon(dungeonName, times = 1)  {
                         }
                     }
                 }
-            } else if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_CHEST_SHOW) {
+            } 
+            
+            if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_CHEST_SHOW) {
                 for (let i = 0; i < DungeonRunner.map.board().length; i++) {
                     for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
                         if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.chest) {
