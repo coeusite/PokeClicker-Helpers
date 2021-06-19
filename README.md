@@ -9,8 +9,13 @@ and with access to all areas of the game. There may be unexpected bugs to hunt d
 
 ## Usage
 - Hatching Eggs
+  - In console, load js and run loopEggs()
   - you may sort Pokemon List to determine hatching priority
   - you may set filters in Hatchery List to add constraints to hatching pokemons 
+- Looping Gym
+  - In console, load js 
+  - run loopGym(gymName, times)
+  - run loopGym("", times) for the gym of current town
 
 ## To-Do
 - [ ] 
