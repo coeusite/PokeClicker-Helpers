@@ -15,8 +15,10 @@ function loadDungeon(dungeonName) {
 
 function loopDungeon(dungeonName, times = 1)  {
     
-    console.log("entering dungeon loop")
     var times = Math.floor(times)
+    console.log("entering dungeon loop", times)
+    var stepOrder
+    var stepIndex
     
     // patch for previous winning
     if(DungeonRunner.defeatedBoss() && times > 0) {times = times + 1}
@@ -46,11 +48,11 @@ function loopDungeon(dungeonName, times = 1)  {
                         for (let y = DungeonRunner.map.playerPosition()['y']; y >= 0; y--) {yList.push(y)}
                         for (let y = DungeonRunner.map.playerPosition()['y'] + 1; y < DungeonRunner.map.size; y++) {yList.push(y)}
                         // 
-                        var stepOrder = [];
+                        stepOrder = [];
                         for (const y of yList) {  for (const x of xList) {
                             stepOrder.push(new Point(x,y))
                         }}
-                        var stepIndex = 1
+                        stepIndex = 1
                     }
                 }
             } else { // stop loop
