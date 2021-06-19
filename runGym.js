@@ -1,26 +1,18 @@
-function loadGym(leaderName) {
-    if (player.town().gym){
+function loadGym(gymName) {
+    if (gymName in gymList) {
+        var gym = gymList[gymName]
+    } else {
         var gym = player.town().gym
-    } else if ('gymList' in player.town()) {
-        var gym = searchGymList(leaderName)
     }
     if (gym) {
         GymRunner.startGym(gym)
         console.log('loading Gym:', gym.leaderName)
     } else {
-        console.log('This Gym does not exist:', leaderName)
+        console.log('This Gym does not exist:', gymName)
     }
 }
 
-function searchGymList(leaderName){
-    for (var i=0; i < player.town().gymList.length; i++) {
-        if (player.town().gymList[i].leaderName === leaderName) {
-            return player.town().gymList[i];
-        }
-    }
-}
-
-function loopGym(leaderName, times = 1)  {
+function loopGym(gymName, times = 1)  {
     console.log("entering loop")
     var times = Math.floor(times)
     var looper = setInterval(function() {
@@ -33,7 +25,7 @@ function loopGym(leaderName, times = 1)  {
         if(times > 0 && App.game.gameState != GameConstants.GameState.gym){
             times = times - 1
             // $("#gymModal").modal('hide');
-            loadGym(leaderName)
+            loadGym(gymName)
         }
         if(times <= 0 && App.game.gameState != GameConstants.GameState.gym){
             // $("#gymModal").modal('hide');
