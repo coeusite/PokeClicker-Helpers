@@ -34,11 +34,23 @@ function loopDungeon(dungeonName, times = 1)  {
                     
                     // next time?
                     if(times > 0) {
+                        // load dungeon first
+                        loadDungeon(dungeonName)
                         //start the dungeon
                         //order in which to traverse dungeon tiles
-                        dOrder = [11, 6, 7, 8, 13, 18, 17, 16, 15, 10, 5, 0 , 1, 2, 3, 4, 9, 14, 19, 24, 23, 22, 21, 20]
-                        dIndex = 0
-                        loadDungeon(dungeonName)
+                        //remake dOrder based on DungeonRunner.map.size and DungeonRunner.map.playerPosition
+                        var xList = [];
+                        var yList = [];
+                        for (let x = DungeonRunner.map.playerPosition()['x']; x >= 0; x--) {xList.push(x)}
+                        for (let x = DungeonRunner.map.playerPosition()['x'] + 1; x < DungeonRunner.map.size; x++) {xList.push(x)}
+                        for (let y = DungeonRunner.map.playerPosition()['y']; y >= 0; y--) {yList.push(y)}
+                        for (let y = DungeonRunner.map.playerPosition()['y'] + 1; y < DungeonRunner.map.size; y++) {yList.push(y)}
+                        // 
+                        var stepOrder = [];
+                        for (const y of yList) {  for (const x of xList) {
+                            stepOrder.push(new Point(x,y))
+                        }}
+                        var stepIndex = 1
                     }
                 }
             } else { // stop loop
@@ -50,15 +62,16 @@ function loopDungeon(dungeonName, times = 1)  {
         }
         
         // To Do: move or action
-        if(dungeonCanMove && !DungeonRunner.defeatedBoss()){
+        if(!(DungeonRunner.fighting() || DungeonBattle.catching()) && !DungeonRunner.defeatedBoss()) {
             // open chest or start boss fight
             if (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.chest) {
                 DungeonRunner.openChest();
             } else if (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss()) {
                 DungeonRunner.startBossFight();
             }
-            moveToRoom(dOrder[dIndex])
-            dIndex = dIndex + 1
+            if (DungeonRunner.map.moveToTile(stepOrder[stepIndex])) {
+                stepIndex = stepIndex + 1
+            }
         }
     }, 600)
 }
