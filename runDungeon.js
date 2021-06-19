@@ -13,8 +13,8 @@ function loadDungeon(dungeonName) {
     }
 }
 
-function loopDungeon(dungeonName, times = 1, smartMove = true)  {
-    var smartMove = smartMove
+function loopDungeon(dungeonName, times = 1, stepMode = 0)  {
+    var stepMode = stepMode
     
     if (!(dungeonName in dungeonList) && !player.town().dungeon) {
         console.log("This Dungeon does not exist:", dungeonName)
@@ -76,7 +76,21 @@ function loopDungeon(dungeonName, times = 1, smartMove = true)  {
             // open chest or start boss fight
             if (DungeonRunner.map.currentTile().type() !== GameConstants.DungeonTile.entrance) { DungeonRunner.handleClick();}
             
-            if (smartMove) {
+            // stepMode 0: ASAP, 1: seek for fight first
+            if (stepMode == 1) {
+               for (let i = 0; i < DungeonRunner.map.board().length; i++) {
+                        for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
+                            if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.enemy) {
+                                if (DungeonRunner.map.hasAccesToTile(new Point(j,i))) {
+                                    stepNext = new Point(j,i)
+                                }
+                            }
+                        }
+                }
+            }
+                
+            // if no fight available
+            if (!stepNext && stepMode == 0) {
                 // if all tiles shown
                 if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_MAP_SHOW) {
                     for (let i = 0; i < DungeonRunner.map.board().length; i++) {
@@ -87,8 +101,10 @@ function loopDungeon(dungeonName, times = 1, smartMove = true)  {
                         }
                     }
                 } 
-
-                if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_CHEST_SHOW) {
+            }
+            
+            // always open chests first if possible
+            if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_CHEST_SHOW) {
                     for (let i = 0; i < DungeonRunner.map.board().length; i++) {
                         for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
                             if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.chest) {
@@ -98,7 +114,6 @@ function loopDungeon(dungeonName, times = 1, smartMove = true)  {
                             }
                         }
                     }
-                }
             }
             
             if (stepNext) {
