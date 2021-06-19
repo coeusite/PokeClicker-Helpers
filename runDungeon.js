@@ -13,7 +13,8 @@ function loadDungeon(dungeonName) {
     }
 }
 
-function loopDungeon(dungeonName, times = 1)  {
+function loopDungeon(dungeonName, times = 1, smartMove = true)  {
+    var smartMove = smartMove
     
     if (!(dungeonName in dungeonList) && !player.town().dungeon) {
         console.log("This Dungeon does not exist:", dungeonName)
@@ -75,23 +76,25 @@ function loopDungeon(dungeonName, times = 1)  {
             // open chest or start boss fight
             if (DungeonRunner.map.currentTile().type() !== GameConstants.DungeonTile.entrance) { DungeonRunner.handleClick();}
             
-            // if all tiles shown
-            if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_MAP_SHOW) {
-                for (let i = 0; i < DungeonRunner.map.board().length; i++) {
-                    for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
-                        if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.boss) {
-                            stepNext = new Point(j,i)
+            if (smartMove) {
+                // if all tiles shown
+                if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_MAP_SHOW) {
+                    for (let i = 0; i < DungeonRunner.map.board().length; i++) {
+                        for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
+                            if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.boss) {
+                                stepNext = new Point(j,i)
+                            }
                         }
                     }
-                }
-            } 
-            
-            if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_CHEST_SHOW) {
-                for (let i = 0; i < DungeonRunner.map.board().length; i++) {
-                    for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
-                        if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.chest) {
-                            if (DungeonRunner.map.hasAccesToTile(new Point(j,i))) {
-                                stepNext = new Point(j,i)
+                } 
+
+                if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_CHEST_SHOW) {
+                    for (let i = 0; i < DungeonRunner.map.board().length; i++) {
+                        for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
+                            if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.chest) {
+                                if (DungeonRunner.map.hasAccesToTile(new Point(j,i))) {
+                                    stepNext = new Point(j,i)
+                                }
                             }
                         }
                     }
