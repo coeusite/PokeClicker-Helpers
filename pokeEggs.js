@@ -1,7 +1,7 @@
 function addEgg(){
     for( var i = 0; i<App.game.party.caughtPokemon.length; i++){
     	var poke = App.game.party.caughtPokemon[i]
-		if(App.game.breeding.canBreedPokemon() && BreedingController.visible(poke)()){
+		if(App.game.breeding.hasFreeEggSlot() && BreedingController.visible(poke)()){
 		    // bypass mom using embedded filters and custom categories
                     App.game.breeding.addPokemonToHatchery(poke)
                     console.log("addPokemonToHatchery:", poke.name, poke.level, poke.breeding, PokemonHelper.calcNativeRegion(poke.name))
@@ -21,9 +21,14 @@ function hatchEggs(){
     }
 }
 
+// raise to global variable
+var eggLoop
+
 function loopEggs(){
-    var eggLoop = setInterval(function() {
-    	console.log("looping Eggs:")
+    // clear previous loop
+    if(!eggLoop) {clearInterval(eggLoop); eggLoop = null; console.log("stop old egg loop");}
+    // start new loop
+    eggLoop = setInterval(function() {
         hatchEggs()
         addEgg()
     }, 6000)
