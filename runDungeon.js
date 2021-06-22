@@ -7,11 +7,13 @@ function loadDungeon(dungeonName) {
     }
     if (dungeon) {
         DungeonRunner.initializeDungeon(dungeon)
-        console.log('loading Dungeon:', dungeon.name)
+        console.log('loading Dungeon:', dungeon.name, loopTimeDungeon)
     } else {
         console.log('This Dungeon does not exist:', dungeonName)
     }
 }
+
+var loopTimeDungeon = 0
 
 function loopDungeon(dungeonName, times = 1, stepMode = 0)  {
     var stepMode = stepMode
@@ -21,27 +23,27 @@ function loopDungeon(dungeonName, times = 1, stepMode = 0)  {
         return
     }
         
-    var times = Math.floor(times)
+    loopTimeDungeon = Math.floor(times)
     console.log("entering dungeon loop", times)
     var stepOrder
     var stepIndex
     
     // patch for previous winning
-    if(DungeonRunner.defeatedBoss() && times > 0) {times = times + 1}
+    if(DungeonRunner.defeatedBoss() && loopTimeDungeon > 0) {loopTimeDungeon = loopTimeDungeon + 1}
     
     var looper = setInterval(function() {
         // if not in a dungeon
         if((App.game.gameState != GameConstants.GameState.dungeon )){
             // next step
-            if(times > 0) {
+            if(loopTimeDungeon > 0) {
                 //if not in a gym or having other constraints
                 if(App.game.gameState != GameConstants.GameState.gym){
                     
                     // if won
-                    if(DungeonRunner.defeatedBoss()) {times = times - 1}
+                    if(DungeonRunner.defeatedBoss()) {loopTimeDungeon = loopTimeDungeon - 1}
                     
                     // next time?
-                    if(times > 0) {
+                    if(loopTimeDungeon > 0) {
                         // load dungeon first
                         loadDungeon(dungeonName)
                         //start the dungeon
