@@ -22,14 +22,18 @@ function hatchEggs(){
 }
 
 // raise to global variable
-var eggLoop
+var flagStopEggLoop = false
 
 function loopEggs(){
-    // clear previous loop
-    if(!eggLoop) {clearInterval(eggLoop); eggLoop = null; console.log("stop old egg loop");}
     // start new loop
-    eggLoop = setInterval(function() {
+    var looper = setInterval(function() {
         hatchEggs()
         addEgg()
+        // stop egg loop
+        if(flagStopEggLoop) {
+            console.log("stop egging loop")
+            clearInterval(looper)
+            flagStopEggLoop = false
+	}
     }, 6000)
 }
