@@ -86,24 +86,9 @@ function loopDungeon(dungeonName, times = 1, stepMode = 0)  {
             
             // open chest or start boss fight
             if (DungeonRunner.map.currentTile().type() !== GameConstants.DungeonTile.entrance) { DungeonRunner.handleClick();}
-            
-            // stepMode 0: ASAP, 1: seek for fight first
-            if (stepMode == 1) {
-               for (let i = 0; i < DungeonRunner.map.board().length; i++) {
-                        for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
-                            if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.enemy) {
-                                if (DungeonRunner.map.hasAccesToTile(new Point(j,i))) {
-                                    stepNext = new Point(j,i)
-                                }
-                            }
-                        }
-                }
-            }
-                
-            // if no fight available
-            if (!stepNext && stepMode == 0) {
-                // if all tiles shown
-                if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_MAP_SHOW) {
+           
+            // if all tiles shown
+            if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_MAP_SHOW) {
                     for (let i = 0; i < DungeonRunner.map.board().length; i++) {
                         for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
                             if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.boss) {
@@ -111,7 +96,6 @@ function loopDungeon(dungeonName, times = 1, stepMode = 0)  {
                             }
                         }
                     }
-                } 
             }
             
             // always open chests first if possible
