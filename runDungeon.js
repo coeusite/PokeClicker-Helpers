@@ -47,15 +47,24 @@ function loopDungeon(dungeonName, times = 1, stepMode = 0)  {
                         //start the dungeon
                         //order in which to traverse dungeon tiles
                         //remake dOrder based on DungeonRunner.map.size and DungeonRunner.map.playerPosition
+                        stepOrder = [];
+                        // first line
                         var xList = [];
-                        var yList = [];
                         for (let x = DungeonRunner.map.playerPosition()['x']; x >= 0; x--) {xList.push(x)}
                         for (let x = DungeonRunner.map.playerPosition()['x'] + 1; x < DungeonRunner.map.size; x++) {xList.push(x)}
-                        for (let y = DungeonRunner.map.playerPosition()['y']; y >= 0; y--) {yList.push(y)}
+                        for (const x of xList) {
+                            stepOrder.push(new Point(x, DungeonRunner.map.playerPosition()['y']))
+                        }
+                        // switch to columns first
+                        var xList = [];
+                        for (let x = 1; x < DungeonRunner.map.size; x = x+3) {xList.push(x)}
+                        for (let x = 0; x < DungeonRunner.map.size; x = x+3) {xList.push(x)}
+                        for (let x = 2; x < DungeonRunner.map.size; x = x+3) {xList.push(x)}
+                        var yList = [];
+                        for (let y = DungeonRunner.map.playerPosition()['y'] - 1; y >= 0; y--) {yList.push(y)}
                         for (let y = DungeonRunner.map.playerPosition()['y'] + 1; y < DungeonRunner.map.size; y++) {yList.push(y)}
                         // 
-                        stepOrder = [];
-                        for (const y of yList) {  for (const x of xList) {
+                        for (const x of xList) {  for (const y of yList) {
                             stepOrder.push(new Point(x,y))
                         }}
                         stepIndex = 1
@@ -104,7 +113,7 @@ function loopDungeon(dungeonName, times = 1, stepMode = 0)  {
             }
             
             // always open chests first if possible
-            if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_CHEST_SHOW) {
+            if (DungeonRunner.chestsOpened >= GameConstants.DUNGEON_CHEST_SHOW && DungeonRunner.chestsOpened < GameConstants.DUNGEON_MAP_SHOW) {
                     for (let i = 0; i < DungeonRunner.map.board().length; i++) {
                         for (let j = 0; j < DungeonRunner.map.board()[i].length; j++) {
                             if (DungeonRunner.map.board()[i][j].type() == GameConstants.DungeonTile.chest) {
